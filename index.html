@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PokéVerse</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          pokered: '#ef5350',
+          pokeblue: '#3b4cca',
+          pokegold: '#ffcc01'
+        }
+      }
+    }
+  };
+</script>
+<style>
+  body {
+    background: url('bg.png') no-repeat center center fixed;
+    background-size: cover;
+    transition: background 0.5s ease;
+    position: relative;
+  }
+
+  /* Dark overlay for background */
+  .dark body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+    transition: background 0.5s ease;
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    transition: background 0.5s ease, border 0.5s ease;
+  }
+
+  .dark .glass {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255,255,255,0.1);
+  }
+
+  .modal-overlay {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    transition: background 0.5s ease;
+  }
+
+  .dark .modal-overlay {
+    background: rgba(0,0,0,0.3);
+  }
+
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .animate-spin-slow {
+    animation: spin-slow 3s linear infinite;
+  }
+
+  @keyframes pulse-compare {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  .animate-pulse-compare {
+    animation: pulse-compare 0.8s ease-in-out;
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col text-gray-800 bg-yellow-50 transition-colors duration-500 dark:text-gray-100 dark:bg-gray-900">
+
+<!-- Header -->
+<header class="text-center py-6 relative">
+  <h1 class="text-5xl font-extrabold text-pokered drop-shadow-lg tracking-wide">PokéVerse</h1>
+  <p class="text-lg mt-2 text-yellow-800 dark:text-yellow-300">Discover your favorite Pokémon and their powers</p>
+
+  <!-- Theme Toggle -->
+  <button id="theme-toggle"
+    class="absolute top-4 right-6 p-2 bg-white/30 dark:bg-yellow-300/30 rounded-full hover:scale-110 transition">
+    <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-900 dark:text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 3v1m0 16v1m8.66-12.66l-.71.71M5.05 18.36l-.71.71M21 12h-1M4 12H3m16.66 4.66l-.71-.71M5.05 5.64l-.71-.71M12 5a7 7 0 000 14 7 7 0 000-14z"/>
+    </svg>
+  </button>
+
+  <div class="mt-6 flex flex-wrap justify-center items-center gap-2">
+    <input id="search" type="text" placeholder="Search Pokémon..."
+      class="p-2 rounded-lg w-64 text-gray-900 dark:text-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pokered">
+    <button id="search-btn"
+      class="p-2 px-3 rounded-lg bg-pokeblue text-white dark:bg-blue-700 hover:bg-pokeblue-600 transition">Search</button>
+
+    <button id="random-btn"
+      class="p-2 px-3 rounded-lg bg-pokegold text-black dark:bg-yellow-700 dark:text-white hover:bg-pokered hover:text-white transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M7.5 7.5h.01M12 12h.01M16.5 16.5h.01M16.5 7.5h.01M7.5 16.5h.01M4 4h16v16H4V4z"/>
+      </svg>
+      Random Pokémon
+    </button>
+  </div>
+
+  <!-- Who Would Win -->
+  <div class="mt-4 flex flex-wrap justify-center items-center gap-2">
+    <input id="poke1" type="text" placeholder="Pokémon 1"
+      class="p-2 rounded-lg w-48 text-gray-900 dark:text-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pokered">
+    <input id="poke2" type="text" placeholder="Pokémon 2"
+      class="p-2 rounded-lg w-48 text-gray-900 dark:text-gray-100 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pokered">
+    <button id="compare-btn"
+      class="p-2 px-3 rounded-lg bg-pokeblue text-white dark:bg-blue-700 hover:bg-pokered transition flex items-center justify-center gap-1">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M8 2a1 1 0 00-1 1v2.586l-2.293 2.293a1 1 0 000 1.414l2.293 2.293V14a1 1 0 001 1h2a1 1 0 001-1v-2.586l2.293-2.293a1 1 0 000-1.414L11 5.586V3a1 1 0 00-1-1H8z" clip-rule="evenodd" />
+      </svg>
+      Who Would Win?
+    </button>
+  </div>
+  <br />
+</header>
+
+<!-- Message -->
+<div id="message" class="text-center text-red-500 font-semibold mt-2"></div>
+
+<!-- Pokémon Grid -->
+<main id="pokemon-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6"></main>
+
+<!-- Loader -->
+<div id="loader" class="hidden fixed inset-0 flex items-center justify-center bg-white/30 dark:bg-black/40 backdrop-blur-md z-40">
+  <div class="relative w-24 h-24">
+    <div class="absolute inset-0 border-8 border-pokered border-t-transparent rounded-full animate-spin"></div>
+    <div class="absolute inset-4 border-8 border-pokeblue border-b-transparent rounded-full animate-spin-slow"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="fixed inset-0 modal-overlay flex justify-center items-center hidden z-50">
+  <div class="glass rounded-2xl p-6 w-11/12 max-w-lg max-h-[90vh] overflow-y-auto relative border border-white/30">
+    <button id="modal-close"
+      class="absolute top-4 right-4 text-2xl font-bold text-pokered hover:text-pokeblue">&times;</button>
+    <img id="modal-sprite" class="mx-auto w-32 h-32 drop-shadow-lg" src="" alt="">
+    <h2 id="modal-name" class="text-2xl text-center font-bold mt-2"></h2>
+    <p id="modal-types" class="text-center mt-1"></p>
+    <div id="modal-stats" class="mt-4"></div>
+    <div id="modal-advantages" class="mt-4"></div>
+  </div>
+</div>
+
+<audio id="open-sound" src="https://vgmsite.com/soundtracks/pokemon-gameboy-sound-collection/nbivwlhx/104-opening.mp3"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('search');
+  const searchBtn = document.getElementById('search-btn');
+  const grid = document.getElementById('pokemon-grid');
+  const modal = document.getElementById('modal');
+  const modalClose = document.getElementById('modal-close');
+  const modalSprite = document.getElementById('modal-sprite');
+  const modalName = document.getElementById('modal-name');
+  const modalTypes = document.getElementById('modal-types');
+  const modalStats = document.getElementById('modal-stats');
+  const messageDiv = document.getElementById('message');
+  const loader = document.getElementById('loader');
+  const openSound = document.getElementById('open-sound');
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+
+  const typeColors = {
+    normal:'#A8A77A', fire:'#EE8130', water:'#6390F0', electric:'#F7D02C', grass:'#7AC74C', ice:'#96D9D6',
+    fighting:'#C22E28', poison:'#A33EA1', ground:'#E2BF65', flying:'#A98FF3', psychic:'#F95587', bug:'#A6B91A',
+    rock:'#B6A136', ghost:'#735797', dragon:'#6F35FC', dark:'#705746', steel:'#B7B7CE', fairy:'#D685AD'
+  };
+
+  const famousPokemons = ["pikachu","charizard","bulbasaur","squirtle","eevee","snorlax",
+    "mewtwo","gengar","lucario","dragonite","gardevoir","arcanine",
+    "gyarados","alakazam","blaziken","scizor","lapras","machamp","raichu","jigglypuff"];
+
+  async function fetchPokemon(query){
+    try {
+      loader.classList.remove('hidden');
+      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
+      if(!res.ok) throw new Error("Not found");
+      const data = await res.json();
+      loader.classList.add('hidden');
+      return data;
+    } catch {
+      messageDiv.textContent = "Pokémon not found!";
+      loader.classList.add('hidden');
+      return null;
+    }
+  }
+
+  function showModal(pokemon){
+    modal.classList.remove('hidden');
+    openSound.play();
+    modalSprite.src = pokemon.sprites.other['official-artwork'].front_default;
+    modalName.textContent = `${pokemon.name.toUpperCase()} (#${pokemon.id})`;
+    modalTypes.innerHTML = pokemon.types.map(t =>
+      `<span class="px-3 py-1 rounded-full text-white font-semibold mx-1" style="background-color:${typeColors[t.type.name]}">${t.type.name.toUpperCase()}</span>`
+    ).join('');
+    modalStats.innerHTML = pokemon.stats.map(stat =>
+      `<div class="my-2">
+        <p class="font-semibold">${stat.stat.name.toUpperCase()}: ${stat.base_stat}</p>
+        <div class="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-2">
+          <div class="bg-pokered h-2 rounded-full" style="width:${Math.min(stat.base_stat,100)}%"></div>
+        </div>
+      </div>`).join('');
+  }
+
+  modalClose.addEventListener('click', ()=>modal.classList.add('hidden'));
+  modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.classList.add('hidden'); });
+
+  function addPokemonCard(pokemon){
+    const card = document.createElement('div');
+    const normalSprite = pokemon.sprites.other['official-artwork'].front_default;
+    const shinySprite = pokemon.sprites.other['official-artwork'].front_shiny || pokemon.sprites.front_shiny;
+
+    card.className = 'glass rounded-2xl p-4 flex flex-col items-center cursor-pointer hover:scale-105 transition transform border border-white/30 shadow-lg';
+    card.innerHTML = `
+      <img src="${normalSprite}" alt="${pokemon.name}" class="pokemon-img w-28 h-28 drop-shadow-md transition-transform">
+      <h3 class="mt-2 font-bold text-lg">${pokemon.name.toUpperCase()}</h3>
+      <div class="mt-1 flex flex-wrap justify-center">
+        ${pokemon.types.map(t=>`
+          <span class="px-2 py-1 rounded-full text-white font-semibold mx-1 text-xs" style="background-color:${typeColors[t.type.name]}">${t.type.name.toUpperCase()}</span>`).join('')}
+      </div>
+    `;
+    const img = card.querySelector('.pokemon-img');
+    img.addEventListener('mouseenter', ()=> img.src = shinySprite);
+    img.addEventListener('mouseleave', ()=> img.src = normalSprite);
+    card.addEventListener('click', ()=>showModal(pokemon));
+    grid.appendChild(card);
+  }
+
+  async function loadFamousPokemons(){
+    for(const name of famousPokemons){
+      const data = await fetchPokemon(name);
+      if(data) addPokemonCard(data);
+    }
+  }
+
+  searchBtn.addEventListener('click', async ()=>{
+    const query = searchInput.value.trim().toLowerCase();
+    if(!query) return;
+    const data = await fetchPokemon(query);
+    if(data) {
+      grid.innerHTML = '';
+      addPokemonCard(data);
+    }
+    searchInput.value = '';
+  });
+
+  document.getElementById('random-btn').addEventListener('click', async ()=>{
+    grid.innerHTML = '';
+    for(let i=0; i<20; i++){
+      const id = Math.floor(Math.random()*898)+1;
+      const data = await fetchPokemon(id);
+      if(data) addPokemonCard(data);
+    }
+  });
+
+  document.getElementById('compare-btn').addEventListener('click', async () => {
+    const poke1Name = document.getElementById('poke1').value.trim().toLowerCase();
+    const poke2Name = document.getElementById('poke2').value.trim().toLowerCase();
+    if (!poke1Name || !poke2Name) { alert('Please enter both Pokémon names!'); return; }
+
+    const poke1 = await fetchPokemon(poke1Name);
+    const poke2 = await fetchPokemon(poke2Name);
+    if (!poke1 || !poke2) { alert('One or both Pokémon not found!'); return; }
+
+    const total1 = poke1.stats.reduce((sum, s) => sum + s.base_stat, 0);
+    const total2 = poke2.stats.reduce((sum, s) => sum + s.base_stat, 0);
+
+    let winnerText = '';
+    if (total1 > total2) winnerText = `${poke1.name.toUpperCase()} Wins! 🏆`;
+    else if (total2 > total1) winnerText = `${poke2.name.toUpperCase()} Wins! 🏆`;
+    else winnerText = "It's a tie! ⚔️";
+
+    messageDiv.innerHTML = `
+      <div class="glass inline-block mt-4 p-4 rounded-xl border border-white/30 animate-pulse-compare">
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <div>
+            <img src="${poke1.sprites.other['official-artwork'].front_default}" alt="${poke1.name}" class="w-24 h-24 mx-auto mb-2">
+            <p class="font-semibold text-center">${poke1.name.toUpperCase()} (${total1})</p>
+          </div>
+          <div class="text-3xl font-bold animate-pulse-compare">⚔️</div>
+          <div>
+            <img src="${poke2.sprites.other['official-artwork'].front_default}" alt="${poke2.name}" class="w-24 h-24 mx-auto mb-2">
+            <p class="font-semibold text-center">${poke2.name.toUpperCase()} (${total2})</p>
+          </div>
+        </div>
+        <p class="text-2xl font-bold text-blue-500 mt-4 animate-pulse-compare">${winnerText}</p>
+      </div>
+    `;
+  });
+
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+  });
+
+  loadFamousPokemons();
+});
+</script>
+</body>
+</html>
