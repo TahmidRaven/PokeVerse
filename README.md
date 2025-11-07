@@ -5,9 +5,10 @@
 PokéVerse is an interactive Pokémon web application that lets users search, compare, and explore Pokémon with a visually appealing interface, complete with dark/light mode support, animations, and Pokémon stats visualization.
 
 ## Live Demo
-Check out the live project hosted on GitHub Pages:  
-🌐 **[PokéVerse Live](https://tahmidraven.github.io/PokeVerse/)**  
+Check out the live project hosted on GitHub Pages:  **[PokéVerse Live](https://tahmidraven.github.io/PokeVerse/)**  
 ---
+<img width="1847" height="986" alt="Screenshot 2025-11-08 041406" src="https://github.com/user-attachments/assets/011774a1-1142-4d12-aa52-3f5926fb086c" />
+<img width="1846" height="996" alt="Screenshot 2025-11-08 041352" src="https://github.com/user-attachments/assets/b4de2830-6f55-47ec-b702-ae39be630461" />
 
 ## About the Project
 PokéVerse allows users to:
