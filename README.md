@@ -4,6 +4,9 @@
 
 PokéVerse is an interactive Pokémon web application that lets users search, compare, and explore Pokémon with a visually appealing interface, complete with dark/light mode support, animations, and Pokémon stats visualization.
 
+## Live Demo
+Check out the live project hosted on GitHub Pages:  
+🌐 **[PokéVerse Live]([https://TahmidRaven.github.io/PokeVerse/](https://tahmidraven.github.io/PokeVerse/))**  
 ---
 
 ## About the Project
@@ -60,10 +63,6 @@ const stats = data.stats.map(s => ({ name: s.stat.name, value: s.base_stat }));
 console.log("Types:", types);
 console.log("Stats:", stats);
 ```
-
-## Live Demo
-Check out the live project hosted on GitHub Pages:  
-🌐 **[PokéVerse Live Demo](https://TahmidRaven.github.io/PokeVerse/)**  
 
 ## Repository
 GitHub Repository:  
