@@ -6,7 +6,7 @@ PokéVerse is an interactive Pokémon web application that lets users search, co
 
 ## Live Demo
 Check out the live project hosted on GitHub Pages:  
-🌐 **[PokéVerse Live]([https://TahmidRaven.github.io/PokeVerse/](https://tahmidraven.github.io/PokeVerse/))**  
+🌐 **[PokéVerse Live](https://tahmidraven.github.io/PokeVerse/)**  
 ---
 
 ## About the Project
