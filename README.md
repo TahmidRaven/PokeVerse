@@ -41,9 +41,42 @@ The app is styled with a glassmorphism effect and animations to enhance the user
 ---
 
 ## APIs Used
-- **[PokéAPI](https://pokeapi.co/)**: Fetches Pokémon data, including stats, types, and artwork.  
+- **[PokéAPI](https://pokeapi.co/)**: Fetches Pokémon data, including stats, types, and artwork.
 
-Example usage in JavaScript:
+## Example usage in JavaScript
 ```javascript
+const query = "pikachu"; // Replace with any Pokémon name or ID
 const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${query}`);
+if (!res.ok) {
+  throw new Error("Pokémon not found");
+}
 const data = await res.json();
+console.log(data);
+
+// Example: Extract types and stats
+const types = data.types.map(t => t.type.name);
+const stats = data.stats.map(s => ({ name: s.stat.name, value: s.base_stat }));
+
+console.log("Types:", types);
+console.log("Stats:", stats);
+```
+
+## Live Demo
+Check out the live project hosted on GitHub Pages:  
+🌐 **[PokéVerse Live Demo](https://TahmidRaven.github.io/PokeVerse/)**  
+
+## Repository
+GitHub Repository:  
+📁 **[PokéVerse on GitHub](https://github.com/TahmidRaven/PokeVerse)**  
+
+## Website / Portfolio
+Visit my personal website:  
+🌐 **[Raven Death Portfolio](https://ravendeath.github.io/)**  
+
+## Screenshots
+![PokéVerse Screenshot](screenshot.png)  
+
+## Author
+**Raven Death**  
+GitHub: [https://github.com/TahmidRaven](https://github.com/TahmidRaven)  
+Portfolio: [https://ravendeath.github.io/](https://ravendeath.github.io/)
